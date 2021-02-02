@@ -2,15 +2,23 @@ class PostsController < ApplicationController
   before_action :set_post!, only: [:show, :edit, :update]
 
   def show
+    @post = set_post!
+
+    render json: @post
   end
 
   def edit
   end
 
   def update
-    @post.update(post_params)
+    @post.assign_attributes(post_params)
+    if @post.valid?
+      @post.update(post_params)
+      redirect_to post_path(@post)
+    else
+      render "edit"
+    end
 
-    redirect_to post_path(@post)
   end
 
   private
